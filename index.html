@@ -1569,7 +1569,7 @@
                 // If theme is represented only by body styling, infer it from a solid background colour.
                 const bodyBackground = body ? window.getComputedStyle(body).backgroundColor : "";
                 const rgb = bodyBackground.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
-                if (rgb && !bodyBackground.includes(", 0)") {
+                if (rgb && !bodyBackground.includes(", 0)")) {
                     const brightness = (Number(rgb[1]) * 299 + Number(rgb[2]) * 587 + Number(rgb[3]) * 114) / 1000;
                     if (brightness > 160) return "light";
                     if (brightness < 90) return "dark";
