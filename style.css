@@ -2659,4 +2659,37 @@ footer {
     transform: translateY(-2px);
 }
 
+/* VJCORE brand logo */
+
+.navbar .logo-image,
+footer .logo-image {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    text-decoration: none;
+    line-height: 1;
+}
+
+.logo-image img {
+    display: block;
+    width: auto;
+    height: 48px;
+    max-width: 220px;
+    object-fit: contain;
+}
+
+/* Mobile layout */
+
+@media (max-width: 768px) {
+    .navbar .logo-image img {
+        height: 36px;
+        max-width: 150px;
+    }
+
+    footer .logo-image img {
+        height: 40px;
+        max-width: 180px;
+    }
+}
+
 }
