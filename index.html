@@ -52,20 +52,24 @@
             text-decoration: none;
         }
 
-        .logo.logo-image img {
+        /* Compact square VJCORE emblem in the top toolbar */
+        .navbar .logo.logo-image img {
             display: block;
-            width: auto;
+            width: 48px;
             height: 48px;
-            max-width: min(220px, 24vw);
-            max-height: 56px;
+            max-width: 48px;
+            max-height: 48px;
             object-fit: contain;
-            object-position: left center;
+            object-position: center;
             border: 0;
-            border-radius: 0;
+            border-radius: 12px;
             box-shadow: none;
+            background: transparent;
         }
 
+        /* Full wordmark stays in the footer */
         footer .logo.logo-image img {
+            display: block;
             height: 52px;
             max-width: min(240px, 32vw);
         }
@@ -78,9 +82,10 @@
 
         @media (max-width: 768px) {
             .navbar .logo.logo-image img {
-                height: 36px;
+                width: 40px;
+                height: 40px;
+                max-width: 40px;
                 max-height: 40px;
-                max-width: min(150px, 38vw);
             }
 
             footer .logo.logo-image img {
@@ -125,13 +130,10 @@
            aria-label="VJCORE Home">
             <img
                 id="navbarBrandLogo"
-                class="theme-aware-logo"
-                src="images/branding/vjcore-logo-dark.png"
-                data-dark-logo="images/branding/vjcore-logo-dark.png"
-                data-light-logo="images/branding/vjcore-logo-light.png"
-                alt="VJCORE — Turning Ideas Into Technology"
-                width="2000"
-                height="760"
+                src="images/branding/vjcore-icon.png"
+                alt="VJCORE"
+                width="1024"
+                height="1024"
                 fetchpriority="high">
         </a>
 
