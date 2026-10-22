@@ -8,10 +8,14 @@
     <meta name="description"
         content="Vijaykumar Manjunath Jantli - Electronics and Communication Engineering Portfolio">
 
-    <title>Vijaykumar Jantli | Portfolio</title>
-    <link rel="icon"
-      type="image/png"
-      href="images/branding/vjcore-icon.png">
+    <title>VJCORE | Vijaykumar Jantli — Portfolio</title>
+
+    <!-- Browser tab icon and mobile/app icon: use the square emblem, not the wide wordmark. -->
+    <link rel="icon" href="images/branding/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="1024x1024" href="images/branding/vjcore-icon.png">
+    <link rel="apple-touch-icon" href="images/branding/vjcore-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="theme-color" content="#06101D">
 
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,6 +30,71 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- VJCORE logo sizing and responsive header treatment -->
+    <style>
+        .navbar .logo.logo-image,
+        footer .logo.logo-image {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex: 0 0 auto;
+            width: auto;
+            height: auto;
+            min-width: 0;
+            min-height: 0;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+            line-height: 1;
+            text-decoration: none;
+        }
+
+        .logo.logo-image img {
+            display: block;
+            width: auto;
+            height: 48px;
+            max-width: min(220px, 24vw);
+            max-height: 56px;
+            object-fit: contain;
+            object-position: left center;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        footer .logo.logo-image img {
+            height: 52px;
+            max-width: min(240px, 32vw);
+        }
+
+        .logo.logo-image:focus-visible {
+            outline: 2px solid #159dff;
+            outline-offset: 5px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar .logo.logo-image img {
+                height: 36px;
+                max-height: 40px;
+                max-width: min(150px, 38vw);
+            }
+
+            footer .logo.logo-image img {
+                height: 42px;
+                max-height: 46px;
+                max-width: min(190px, 48vw);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .logo.logo-image img { transition: none !important; }
+        }
+    </style>
+
 </head>
 
 <body>
@@ -54,11 +123,17 @@
        <a href="#home"
            class="logo logo-image"
            aria-label="VJCORE Home">
-
             <img
-            src="images/branding/vjcore-logo-dark.png"
-            alt="VJCORE — Turning Ideas Into Technology">
-    </a>
+                id="navbarBrandLogo"
+                class="theme-aware-logo"
+                src="images/branding/vjcore-logo-dark.png"
+                data-dark-logo="images/branding/vjcore-logo-dark.png"
+                data-light-logo="images/branding/vjcore-logo-light.png"
+                alt="VJCORE — Turning Ideas Into Technology"
+                width="2000"
+                height="760"
+                fetchpriority="high">
+        </a>
 
         <nav id="navMenu">
 
@@ -1412,11 +1487,16 @@
                 <a href="#home"
                    class="logo logo-image"
                    aria-label="VJCORE Home">
-
                     <img
-                    src="images/branding/vjcore-logo-dark.png"
-                    alt="VJCORE — Turning Ideas Into Technology">
-
+                        id="footerBrandLogo"
+                        class="theme-aware-logo"
+                        src="images/branding/vjcore-logo-dark.png"
+                        data-dark-logo="images/branding/vjcore-logo-dark.png"
+                        data-light-logo="images/branding/vjcore-logo-light.png"
+                        alt="VJCORE — Turning Ideas Into Technology"
+                        width="2000"
+                        height="760"
+                        loading="lazy">
                 </a>
 
                 <p>
@@ -1455,6 +1535,87 @@
 
     <!-- JavaScript -->
     <script src="script.js"></script>
+
+
+    <!-- Keep the navbar and footer logos readable when the existing theme toggle changes modes. -->
+    <script>
+        (function () {
+            "use strict";
+
+            const DARK_LOGO = "images/branding/vjcore-logo-dark.png";
+            const LIGHT_LOGO = "images/branding/vjcore-logo-light.png";
+            const logos = Array.from(document.querySelectorAll(".theme-aware-logo"));
+            if (!logos.length) return;
+
+            let currentLogoTheme = "dark"; // The supplied portfolio initially uses the dark theme.
+
+            function themeFromMarkers() {
+                const root = document.documentElement;
+                const body = document.body;
+                const elements = [root, body].filter(Boolean);
+
+                // Prefer explicit theme attributes if the site's existing code uses them.
+                for (const element of elements) {
+                    const value = (element.getAttribute("data-theme") || element.getAttribute("data-color-mode") || "").toLowerCase();
+                    if (value.includes("light")) return "light";
+                    if (value.includes("dark")) return "dark";
+                }
+
+                // Support common class names used by theme-toggle implementations.
+                const allClasses = elements.map(el => String(el.className || "")).join(" ").toLowerCase();
+                if (/(^|[\s_-])(light|light-mode|light-theme|theme-light|lightmode)(?=$|[\s_-])/.test(allClasses)) return "light";
+                if (/(^|[\s_-])(dark|dark-mode|dark-theme|theme-dark|darkmode)(?=$|[\s_-])/.test(allClasses)) return "dark";
+
+                // If theme is represented only by body styling, infer it from a solid background colour.
+                const bodyBackground = body ? window.getComputedStyle(body).backgroundColor : "";
+                const rgb = bodyBackground.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+                if (rgb && !bodyBackground.includes(", 0)") {
+                    const brightness = (Number(rgb[1]) * 299 + Number(rgb[2]) * 587 + Number(rgb[3]) * 114) / 1000;
+                    if (brightness > 160) return "light";
+                    if (brightness < 90) return "dark";
+                }
+                return null;
+            }
+
+            function setLogoTheme(theme) {
+                currentLogoTheme = theme === "light" ? "light" : "dark";
+                const path = currentLogoTheme === "light" ? LIGHT_LOGO : DARK_LOGO;
+                logos.forEach(img => {
+                    if (img.getAttribute("src") !== path) img.setAttribute("src", path);
+                });
+            }
+
+            function syncLogoToPageTheme() {
+                const detected = themeFromMarkers();
+                if (detected) setLogoTheme(detected);
+            }
+
+            // Initial selection and following any body/root theme class changes.
+            syncLogoToPageTheme();
+            const observer = new MutationObserver(syncLogoToPageTheme);
+            [document.documentElement, document.body].filter(Boolean).forEach(element => {
+                observer.observe(element, { attributes: true, attributeFilter: ["class", "data-theme", "data-color-mode", "style"] });
+            });
+
+            // Fallback for themes that switch visuals without exposing a class or data-theme marker.
+            const themeButton = document.getElementById("themeToggle");
+            if (themeButton) {
+                themeButton.addEventListener("click", function () {
+                    const previous = currentLogoTheme;
+                    window.setTimeout(function () {
+                        const detected = themeFromMarkers();
+                        if (detected && detected !== previous) {
+                            setLogoTheme(detected);
+                        } else if (!detected) {
+                            setLogoTheme(previous === "dark" ? "light" : "dark");
+                        } else {
+                            setLogoTheme(detected);
+                        }
+                    }, 80);
+                });
+            }
+        })();
+    </script>
 
 </body>
 
